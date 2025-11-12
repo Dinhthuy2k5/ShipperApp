@@ -1,5 +1,6 @@
 package com.shipperapp
 
+import android.os.Bundle
 import com.facebook.react.ReactActivity
 import com.facebook.react.ReactActivityDelegate
 import com.facebook.react.defaults.DefaultNewArchitectureEntryPoint.fabricEnabled
@@ -12,6 +13,12 @@ class MainActivity : ReactActivity() {
    * rendering of the component.
    */
   override fun getMainComponentName(): String = "ShipperApp"
+
+  // --- THÊM KHỐI CODE NÀY VÀO (Cú pháp Kotlin) ---
+  override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(null) // <-- Quan trọng: dùng null để fix lỗi
+  }
+  // --- KẾT THÚC KHỐI CODE THÊM VÀO ---
 
   /**
    * Returns the instance of the [ReactActivityDelegate]. We use [DefaultReactActivityDelegate]

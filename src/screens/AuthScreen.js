@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+// File: src/screens/AuthScreen.js
+import React, { useState } from 'react';
 import {
     View,
     Text,
@@ -9,22 +10,22 @@ import {
     KeyboardAvoidingView,
     Platform
 } from 'react-native';
-import axios from "axios";
+import axios from 'axios';
 
-// Sửa từ 'http://localhost:3000/api/auth' thành IP cố định của Host
 const API_URL = 'http://10.0.2.2:3000/api/auth';
 
-const AuthScreen = ({ onSignIn }) => {
+// SỬA: Nhận { route } từ props (do AuthStack truyền vào)
+const AuthScreen = ({ route }) => {
+    // Lấy hàm onSignIn từ params
+    const { onSignIn } = route.params;
+
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [fullName, setFullName] = useState('');
-
-    // Biến trạng thái để chuyển đổi giữa Đăng nhập (false) và Đăng ký (true)
+    const [fullName, setFullName] = useState(''); // Thêm fullName
     const [isRegistering, setIsRegistering] = useState(false);
 
-    // --- HÀM XỬ LÝ CHÍNH ---
     const handleAuth = async () => {
-        // Kiểm tra các trường bắt buộc
+        // SỬA: Thêm validation cho fullName
         if (!email || !password || (isRegistering && !fullName)) {
             Alert.alert('Lỗi', 'Vui lòng nhập đầy đủ Email, Mật khẩu và Tên.');
             return;
@@ -34,44 +35,28 @@ const AuthScreen = ({ onSignIn }) => {
             let token = null;
 
             if (isRegistering) {
-                // 1. QUÁ TRÌNH ĐĂNG KÝ
-                await axios.post(`${API_URL}/register`, {
-                    email,
-                    password,
-                    fullName
-                });
-
-                // Hiển thị Alert 1: Đăng ký thành công
+                // --- 1. QUÁ TRÌNH ĐĂNG KÝ ---
+                await axios.post(`${API_URL}/register`, { email, password, fullName });
                 Alert.alert('Thành công', 'Đăng ký thành công! Đang chuyển sang đăng nhập...');
-
-                // DỪNG 1 GIÂY để người dùng đọc thông báo (Dùng Promise.all để tạm dừng async function)
                 await new Promise(resolve => setTimeout(resolve, 1000));
             }
-            // LƯU Ý: Alert 1 sẽ tự biến mất khi Alert 2 được gọi ở dưới
 
-            // --- 2. QUÁ TRÌNH ĐĂNG NHẬP (Thực hiện sau đăng ký hoặc đăng nhập trực tiếp) ---
+            // --- 2. QUÁ TRÌNH ĐĂNG NHẬP ---
             const loginResponse = await axios.post(`${API_URL}/login`, { email, password });
             token = loginResponse.data.token;
 
             if (token) {
-                // Hiển thị Alert 2: Đăng nhập thành công
-                Alert.alert('Thành công', 'Đăng nhập thành công! Token đã được lưu.',
-                    [{ text: 'OK', onPress: () => onSignIn(token) }]
+                Alert.alert('Thành công', 'Đăng nhập thành công!',
+                    [{ text: 'OK', onPress: () => onSignIn(token) }] // SỬA: Dùng onSignIn từ route.params
                 );
-                await new Promise(resolve => setTimeout(resolve, 1000));
             } else {
-                Alert.alert('Lỗi', 'Lỗi không xác định: Không nhận được Token từ API Login.');
+                Alert.alert('Lỗi', 'Lỗi không xác định: Không nhận được Token.');
             }
 
         } catch (error) {
-            // 4. Xử lý lỗi (Nếu đăng ký/đăng nhập thất bại)
-            console.error('Lỗi API:', error.response?.data?.message || error.message);
-            const errorMessage = error.response?.data?.message || 'Có lỗi xảy ra khi kết nối server.';
-
-            Alert.alert(
-                isRegistering ? 'Đăng ký thất bại' : 'Đăng nhập thất bại',
-                errorMessage
-            );
+            console.log(error.response?.data);
+            const errorMessage = error.response?.data?.error || 'Có lỗi xảy ra khi kết nối server.';
+            Alert.alert(isRegistering ? 'Đăng ký thất bại' : 'Đăng nhập thất bại', errorMessage);
         }
     };
 
@@ -79,6 +64,7 @@ const AuthScreen = ({ onSignIn }) => {
         setIsRegistering(prev => !prev);
         setEmail('');
         setPassword('');
+        setFullName(''); // Reset
     };
 
     return (
@@ -90,7 +76,6 @@ const AuthScreen = ({ onSignIn }) => {
                 {isRegistering ? 'ĐĂNG KÝ SHIPPER' : 'ĐĂNG NHẬP SHIPPER'}
             </Text>
 
-            {/* Input Email */}
             <TextInput
                 style={styles.input}
                 placeholder="Email"
@@ -100,14 +85,7 @@ const AuthScreen = ({ onSignIn }) => {
                 autoCapitalize="none"
             />
 
-            {/* Input Password */}
-            <TextInput
-                style={styles.input}
-                placeholder="Mật khẩu"
-                value={password}
-                onChangeText={setPassword}
-                secureTextEntry
-            />
+            {/* SỬA: Thêm ô fullName */}
             {isRegistering && (
                 <TextInput
                     style={styles.input}
@@ -117,7 +95,14 @@ const AuthScreen = ({ onSignIn }) => {
                 />
             )}
 
-            {/* Nút Đăng ký/Đăng nhập */}
+            <TextInput
+                style={styles.input}
+                placeholder="Mật khẩu"
+                value={password}
+                onChangeText={setPassword}
+                secureTextEntry
+            />
+
             <TouchableOpacity
                 style={styles.button}
                 onPress={handleAuth}
@@ -126,7 +111,7 @@ const AuthScreen = ({ onSignIn }) => {
                     {isRegistering ? 'ĐĂNG KÝ TÀI KHOẢN' : 'ĐĂNG NHẬP'}
                 </Text>
             </TouchableOpacity>
-            {/* Nút Chuyển đổi Mode */}
+
             <TouchableOpacity
                 style={styles.toggleButton}
                 onPress={toggleMode}
@@ -142,6 +127,7 @@ const AuthScreen = ({ onSignIn }) => {
     );
 };
 
+// ... (Copy styles từ AuthScreen cũ của bạn)
 const styles = StyleSheet.create({
     container: {
         flex: 1,
@@ -167,7 +153,7 @@ const styles = StyleSheet.create({
         fontSize: 16,
     },
     button: {
-        backgroundColor: '#007AFF', // Màu xanh dương nổi bật
+        backgroundColor: '#007AFF',
         padding: 15,
         borderRadius: 8,
         alignItems: 'center',
@@ -190,4 +176,3 @@ const styles = StyleSheet.create({
 });
 
 export default AuthScreen;
-
