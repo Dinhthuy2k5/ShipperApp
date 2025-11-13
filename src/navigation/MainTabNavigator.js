@@ -4,7 +4,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Icon from 'react-native-vector-icons/Ionicons'; // Import Icon
 
 import HomeScreen from '../screens/HomeScreen'; // Màn hình Home mới
-// import ProfileScreen from '../screens/ProfileScreen'; // Màn hình Hồ sơ mới
+import ProfileScreen from '../screens/ProfileScreen'; // Màn hình Hồ sơ mới
 
 const Tab = createBottomTabNavigator();
 

@@ -10,7 +10,7 @@ const AuthStack = ({ onSignIn }) => {
         <Stack.Navigator screenOptions={{ headerShown: false }}>
             <Stack.Screen
                 name="Auth"
-                component={AuthScreen}
+                component={AuthScreen}     // màn hình đăng kí/ đăng nhập
                 initialParams={{ onSignIn: onSignIn }} // Truyền hàm onSignIn vào AuthScreen
             />
         </Stack.Navigator>
