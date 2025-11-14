@@ -6,12 +6,12 @@ import {
     StyleSheet,
     TouchableOpacity,
     FlatList, // Dùng để hiển thị danh sách
-    SafeAreaView
 } from 'react-native';
 import axios from 'axios';
 import { jwtDecode } from 'jwt-decode'; // Import thư viện giải mã
 import Icon from 'react-native-vector-icons/Ionicons';
 import { useFocusEffect } from '@react-navigation/native'; // Import useFocusEffect
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 // API Lấy lịch sử lộ trình (Dùng IP cố định 10.0.2.2)
 const API_URL = 'http://10.0.2.2:3000/api/routes';
@@ -27,7 +27,7 @@ const getUsernameFromToken = (token) => {
     }
 };
 
-const HomeScreen = ({ userToken }) => {
+const HomeScreen = ({ userToken, navigation }) => {
     const username = getUsernameFromToken(userToken);
     const [routes, setRoutes] = useState([]);
 
@@ -54,7 +54,11 @@ const HomeScreen = ({ userToken }) => {
 
     // Hàm render mỗi item trong danh sách
     const renderRouteItem = ({ item }) => (
-        <View style={styles.routeItem}>
+        <TouchableOpacity
+            style={styles.routeItem}
+            // Thêm sự kiện onPress:
+            onPress={() => navigation.navigate('RouteDetail', { routeId: item.id })}
+        >
             <Text style={styles.routeName}>{item.route_name}</Text>
             <Text style={styles.routeDate}>
                 Ngày tạo: {new Date(item.created_at).toLocaleDateString('vi-VN')}
@@ -65,7 +69,7 @@ const HomeScreen = ({ userToken }) => {
                     Khoảng {Math.round(item.total_duration_seconds / 60)} phút
                 </Text>
             )}
-        </View>
+        </TouchableOpacity>
     );
 
     return (

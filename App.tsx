@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { View, ActivityIndicator, StyleSheet, StatusBar } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { NavigationContainer } from '@react-navigation/native';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 // Import 2 luồng điều hướng của bạn
 import AuthStack from './src/navigation/AuthStack';
@@ -56,14 +57,16 @@ const App = () => {
   }
 
   return (
-    <NavigationContainer>
-      <StatusBar barStyle="dark-content" />
-      {authState === 'signedOut' ? (
-        <AuthStack onSignIn={signIn} />
-      ) : (
-        <MainTabNavigator userToken={userToken} onSignOut={signOut} />
-      )}
-    </NavigationContainer>
+    <SafeAreaProvider>
+      <NavigationContainer>
+        <StatusBar barStyle="dark-content" />
+        {authState === 'signedOut' ? (
+          <AuthStack onSignIn={signIn} />
+        ) : (
+          <MainTabNavigator userToken={userToken} onSignOut={signOut} />
+        )}
+      </NavigationContainer>
+    </SafeAreaProvider>
   );
 };
 

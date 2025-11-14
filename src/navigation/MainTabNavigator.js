@@ -3,7 +3,7 @@ import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Icon from 'react-native-vector-icons/Ionicons'; // Import Icon
 
-import HomeScreen from '../screens/HomeScreen'; // Màn hình Home mới
+import HomeStack from './HomeStack'; // Màn hình Home mới
 import ProfileScreen from '../screens/ProfileScreen'; // Màn hình Hồ sơ mới
 
 const Tab = createBottomTabNavigator();
@@ -26,13 +26,13 @@ const MainTabNavigator = ({ userToken, onSignOut }) => {
                 headerShown: false, // Ẩn header mặc định
             })}
         >
-            {/* Tab 1: Trang chủ (theo sketch) */}
+            {/* Tab 1: Trang home, gọi đến HomeStack (theo sketch) */}
             <Tab.Screen
                 name="HomeTab"
                 options={{ title: 'Trang chủ' }}
             >
-                {/* Truyền userToken vào HomeScreen */}
-                {() => <HomeScreen userToken={userToken} />}
+                {/* Truyền userToken vào HomeStack */}
+                {() => <HomeStack userToken={userToken} />}
             </Tab.Screen>
 
             {/* Tab 2: Hồ sơ (để Đăng xuất) */}
