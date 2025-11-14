@@ -78,7 +78,9 @@ const HomeScreen = ({ userToken, navigation }) => {
             <Text style={styles.welcomeText}>Chào, {username}!</Text>
 
             {/* 2. Thanh Tạo lộ trình (Theo sketch) */}
-            <TouchableOpacity style={styles.createButton}>
+            <TouchableOpacity style={styles.createButton}
+                onPress={() => navigation.navigate('CreateRoute')}
+            >
                 <Icon name="search-outline" size={20} color="#555" />
                 <Text style={styles.createButtonText}>Tìm kiếm hoặc Tạo lộ trình mới</Text>
                 <Icon name="add" size={24} color="#007AFF" />

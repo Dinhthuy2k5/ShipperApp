@@ -6,6 +6,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import HomeScreen from '../screens/HomeScreen';
 import RouteDetailScreen from '../screens/RouteDetailScreen'; // Màn hình mới
+import CreateRouteScreen from '../screens/CreateRouteScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -27,6 +28,13 @@ const HomeStack = ({ userToken }) => {
                 name="RouteDetail"
                 component={RouteDetailScreen}
                 options={{ title: 'Chi tiết Lộ trình' }} // Đặt tiêu đề cho màn hình chi tiết
+            />
+
+            {/* Màn hình : Tạo lộ trình mới */}
+            <Stack.Screen
+                name="CreateRoute"
+                component={CreateRouteScreen}
+                options={{ title: 'Tạo Lộ trình Mới' }} // Đặt tiêu đề
             />
         </Stack.Navigator>
     );
