@@ -1,6 +1,24 @@
-pluginManagement { includeBuild("../node_modules/@react-native/gradle-plugin") }
-plugins { id("com.facebook.react.settings") }
+// File: E:\ShipperApp\android\settings.gradle
+
+pluginManagement {
+    repositories {
+        google()
+        mavenCentral()
+        gradlePluginPortal()
+    }
+    // Nạp plugin từ node_modules
+    includeBuild("../node_modules/@react-native/gradle-plugin")
+}
+
+plugins {
+    id("com.facebook.react.settings")
+}
+
 extensions.configure(com.facebook.react.ReactSettingsExtension){ ex -> ex.autolinkLibrariesFromCommand() }
-rootProject.name = 'ShipperApp'
-include ':app'
+
+rootProject.name = "ShipperApp"
+include(":app")
+
 includeBuild('../node_modules/@react-native/gradle-plugin')
+
+// Cú pháp đúng cho RN 0.82 / Gradle 8.8

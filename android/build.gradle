@@ -1,3 +1,5 @@
+// File: E:\ShipperApp\android\build.gradle (File Cha)
+
 buildscript {
     ext {
         buildToolsVersion = "36.0.0"
@@ -6,11 +8,18 @@ buildscript {
         targetSdkVersion = 36
         ndkVersion = "27.1.12297006"
         kotlinVersion = "2.1.20"
+        mapboxDownloadToken = project.properties["MAPBOX_DOWNLOADS_TOKEN"] ?: ""
     }
+
+    
+
+    // Nơi tìm các plugin
     repositories {
         google()
         mavenCentral()
     }
+
+    // Các plugin với phiên bản (version) cụ thể
     dependencies {
         classpath("com.android.tools.build:gradle")
         classpath("com.facebook.react:react-native-gradle-plugin")
@@ -18,4 +27,23 @@ buildscript {
     }
 }
 
-apply plugin: "com.facebook.react.rootproject"
+// Kho chứa cho TẤT CẢ các dự án con (như :app, :@rnmapbox-maps)
+allprojects {
+    repositories {
+        // === MAPBOX MAVEN - BẮT BUỘC PHẢI CÓ ===
+        maven {
+            url "https://api.mapbox.com/downloads/v2/releases/maven"
+            authentication {
+                basic(BasicAuthentication)
+            }
+            credentials {
+                username = "mapbox"
+                password = project.properties["MAPBOX_DOWNLOADS_TOKEN"] ?: ""
+            }
+        }
+
+        google()
+        mavenCentral()
+        maven { url 'https://www.jitpack.io' }
+    }
+}

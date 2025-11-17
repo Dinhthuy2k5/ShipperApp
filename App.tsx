@@ -5,6 +5,7 @@ import { View, ActivityIndicator, StyleSheet, StatusBar } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { NavigationContainer } from '@react-navigation/native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 // Import 2 luồng điều hướng của bạn
 import AuthStack from './src/navigation/AuthStack';
@@ -57,16 +58,18 @@ const App = () => {
   }
 
   return (
-    <SafeAreaProvider>
-      <NavigationContainer>
-        <StatusBar barStyle="dark-content" />
-        {authState === 'signedOut' ? (
-          <AuthStack onSignIn={signIn} />
-        ) : (
-          <MainTabNavigator userToken={userToken} onSignOut={signOut} />
-        )}
-      </NavigationContainer>
-    </SafeAreaProvider>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <SafeAreaProvider>
+        <NavigationContainer>
+          <StatusBar barStyle="dark-content" />
+          {authState === 'signedOut' ? (
+            <AuthStack onSignIn={signIn} />
+          ) : (
+            <MainTabNavigator userToken={userToken} onSignOut={signOut} />
+          )}
+        </NavigationContainer>
+      </SafeAreaProvider>
+    </GestureHandlerRootView>
   );
 };
 
